@@ -31,6 +31,51 @@ Exit if you fail to download the paper after 3 attempts.
 - Focus on: **Abstract → Introduction → Methodology → Experiments → Conclusion**
 - Identify figures and tables that summarize key information
 
+**⚠️ Large PDF Handling (Chunked Reading Strategy):**
+
+When paper content exceeds the context window, use this chunked approach:
+
+```
+Phase 1: Skeleton Pass (Priority Sections)
+├── Abstract        → Get problem, method, results overview
+├── Introduction    → Get motivation, contributions
+├── Conclusion      → Get key findings, limitations
+└── Section Headers → Build document structure map
+
+Phase 2: Deep Dive (Section-by-Section)
+├── Methodology/Approach  → Architecture, algorithms
+├── Experiments/Results   → Benchmarks, ablations
+├── Related Work          → Context, baselines
+└── Appendix (if needed)  → Implementation details
+
+Phase 3: Synthesis
+└── Merge extracted info into template
+```
+
+**Section Priority for Chunked Reading:**
+
+| Priority | Sections | What to Extract |
+|----------|----------|-----------------|
+| P0 (Must) | Abstract, Conclusion | Problem, method, key results |
+| P1 (High) | Methodology, Experiments | Architecture, training, benchmarks |
+| P2 (Medium) | Introduction, Related Work | Motivation, SOTA comparison |
+| P3 (Low) | Appendix, Supplementary | Implementation details, proofs |
+
+**Chunk Size Guidelines:**
+- Target ~3000-4000 tokens per chunk
+- Never split mid-paragraph or mid-table
+- Include section headers for context
+- Overlap 2-3 sentences between chunks for continuity
+
+**Merging Results:**
+```
+For each template section:
+1. Collect relevant extracts from all chunks
+2. Deduplicate overlapping information
+3. Resolve conflicts (prefer specific numbers over vague descriptions)
+4. Mark gaps as "N/A - Not in processed sections"
+```
+
 ### Step 2: Template Application
 - Use the structured format in [Reading-Template.md](references/Reading-Template.md)
 - Fill in each section systematically
@@ -53,6 +98,51 @@ Exit if you fail to download the paper after 3 attempts.
 - Output your report to {paper_name}.md under working directory
 - Remove any unneeded files (e.g., `*.pdf`, `*.txt`)
 
+### Step 6: Self-Review & Quality Check
+
+**Before finalizing, verify your report against this checklist:**
+
+#### Structure Completeness Check
+| Section | Required Elements | ✓ |
+|---------|-------------------|---|
+| **TL;DR** | 3-5 sentences covering problem, method, results | ☐ |
+| **§1 Problem** | Core problem + SOTA gap + importance | ☐ |
+| **§2 Insights** | Key "aha" moment + contributions list | ☐ |
+| **§3 Data** | Dataset table + preprocessing steps | ☐ |
+| **§4 Model** | Architecture overview + key components + equations | ☐ |
+| **§5 Training** | Strategy + hyperparameters + infrastructure | ☐ |
+| **§6 Results** | Benchmark table + ablations | ☐ |
+| **§7 Limits** | At least 2 limitations or future work items | ☐ |
+| **§8 Reproducibility** | Code/Data/Weights availability table | ☐ |
+
+#### Quality Standards Check
+| Criterion | Requirement | ✓ |
+|-----------|-------------|---|
+| **Precision** | All numbers are exact (no "around", "approximately") | ☐ |
+| **Tables** | Datasets and benchmarks use table format | ☐ |
+| **N/A Handling** | Missing info marked as "N/A" or "Not Disclosed" | ☐ |
+| **Math Format** | Equations use LaTeX: `$...$` or `$$...$$` | ☐ |
+| **No Fluff** | No subjective praise ("excellent", "superior") | ☐ |
+| **Citations** | Key claims reference specific sections/tables | ☐ |
+
+#### Common Issues to Avoid
+```
+❌ Vague: "The model uses a large learning rate"
+✅ Precise: "Learning rate: 1e-4 with cosine decay to 1e-6"
+
+❌ Missing: (empty section)
+✅ Explicit: "N/A - Not disclosed in paper"
+
+❌ Subjective: "The results are impressive"
+✅ Objective: "Achieves 85.3% on MMLU (+3.2% vs. Llama-2-70B)"
+```
+
+#### Final Validation
+- [ ] All 8 template sections are present
+- [ ] Paper title and metadata are filled
+- [ ] At least one table exists (data or benchmarks)
+- [ ] Report length is reasonable (not too short/long)
+
 ## Output Format
 
 Your response MUST follow the template structure with these constraints:
@@ -68,6 +158,7 @@ Your response MUST follow the template structure with these constraints:
 ### references/
 - [Reading-Template.md](references/Reading-Template.md): The primary structured format for all paper deconstructions. Use this as the blueprint for your response.
 - [download_paper.py](references/download_paper.py): Python utility for downloading papers from URLs.
+- [chunk_paper.py](references/chunk_paper.py): Python utility for splitting large PDFs into manageable chunks.
 
 ## Utilities
 
@@ -92,3 +183,40 @@ python references/download_paper.py {URL}
 - URL normalization for arxiv (abs → pdf)
 - PDF validation (checks `%PDF` signature)
 - No external dependencies (uses stdlib only)
+
+### PDF Chunking Tool
+
+For large PDFs that exceed context window, use the chunking script:
+
+```bash
+# Basic usage (outputs to ./chunks/)
+python references/chunk_paper.py paper.pdf
+
+# Specify output directory
+python references/chunk_paper.py paper.pdf ./my_chunks/
+
+# Custom token limit per chunk
+python references/chunk_paper.py paper.pdf ./chunks/ --max-tokens 3000
+```
+
+**Output Structure:**
+```
+chunks/
+├── paper_manifest.json      # Chunk index with metadata
+├── paper_chunk00_P0.txt     # Priority 0 (Abstract, Conclusion)
+├── paper_chunk01_P1.txt     # Priority 1 (Methods, Experiments)
+├── paper_chunk02_P2.txt     # Priority 2 (Introduction, Related Work)
+└── ...
+```
+
+**Processing Workflow:**
+1. Run chunker → generates prioritized chunks
+2. Read `manifest.json` → understand structure
+3. Process P0 chunks first → get core understanding
+4. Process P1/P2 as needed → fill details
+5. Merge into final report
+
+**Requirements:**
+```bash
+pip install PyMuPDF
+```

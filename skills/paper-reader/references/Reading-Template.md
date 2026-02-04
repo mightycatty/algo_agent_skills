@@ -87,3 +87,32 @@ Use this template to deconstruct deep learning papers into a structured format. 
 - **Sufficient Details:** Are hyperparameters, configurations, and training steps fully disclosed?
 - **Hardware Requirements:** What compute is needed to reproduce? (e.g., "8× A100 for fine-tuning")
 - **Reproducibility Notes:** Any caveats or known issues with reproduction?
+
+---
+
+## Section Completion Criteria
+
+> Use this checklist to verify each section meets the quality bar before submission.
+
+| Section | Minimum Requirements | Quality Indicators |
+|---------|---------------------|-------------------|
+| **TL;DR** | 3-5 complete sentences | Covers problem, method, and quantitative result |
+| **§1 Problem** | All 3 bullet points answered | Specific SOTA gap identified with citations |
+| **§2 Insights** | At least 1 key insight + 2 contributions | "Aha" moment clearly articulated |
+| **§3 Data** | Table with ≥1 dataset row | Preprocessing steps listed |
+| **§4 Model** | Architecture type + ≥1 equation | Novel components explained in detail |
+| **§5 Training** | Optimizer + LR + batch size filled | Infrastructure section complete |
+| **§6 Results** | Table with ≥2 benchmark rows | Ablation findings summarized |
+| **§7 Limits** | ≥2 limitations listed | Future work mentioned |
+| **§8 Reproducibility** | All 3 table rows filled | Hardware requirements specified |
+
+### Acceptable "N/A" Usage
+
+Mark as "N/A" or "Not Disclosed" **only** when:
+- Information is genuinely not present in the paper
+- After checking: Abstract, Methods, Experiments, Appendix, and Supplementary materials
+
+**Do NOT use N/A for:**
+- Information you haven't looked for yet
+- Sections you skipped due to time constraints
+- Details that require inference but are derivable from context

@@ -1,26 +1,64 @@
-# Algo Agent Skills
+# 🤖 Algo Agent Skills
 
-A collection of specialized agent skills for deep learning research, paper deconstruction, and algorithmic problem-solving.
+> A curated collection of specialized AI agent skills designed for Algorithm Developers. Enhance your AI coding assistants with domain-specific capabilities.
 
-## Skills
+## 📦 Installation
 
-### [Paper Reader](./skills/paper-reader/SKILL.md)
-An expert skill for deconstructing deep learning research papers into structured technical summaries. It focuses on:
-- Core methodology and novel contributions.
-- Architectural details and implementation specifics.
-- Training hyperparameters and hardware setups.
-- Benchmarks and objective results extraction.
+### Gemini CLI
 
-## Installation
-
-To use these skills in your Gemini CLI, link the extension:
-
+**Install all extensions from the gemini CLI:**
 ```bash
+# Clone the repository
+git clone https://github.com/mightycatty/algo_agent_skills.git
+
+# Navigate to the directory
+cd algo_agent_skills
+
+# Link as Gemini extension
 gemini extensions link .
 ```
 
-## Structure
+**Install a specific extension:**
 
-- `skills/`: Contains the individual skill definitions.
-- `tests/`: Project tests (Python files are tracked, others are ignored).
-- `commands/`: Custom CLI commands (placeholder for future use).
+```bash
+# e.g. install the paper reader skill
+gemini skills install https://github.com/mightycatty/algo_agent_skills.git --path skills/paper-reader
+```
+
+### Other CLIs
+TODO
+
+## 🛠️ Available Skills
+
+### 📄 [Paper Reader](./skills/paper-reader/SKILL.md)
+
+**Deconstruct deep learning research papers into structured technical summaries.**
+
+Transform complex ML papers into actionable insights with systematic extraction of:
+
+| Component | What's Extracted |
+|-----------|------------------|
+| **Problem & Insights** | Core problem, SOTA gaps, key contributions |
+| **Data** | Datasets, preprocessing, synthetic data pipelines |
+| **Architecture** | Model design, novel components, mathematical formulations |
+| **Training** | Hyperparameters, optimization, infrastructure |
+| **Results** | Benchmarks, ablations, comparative analysis |
+| **Reproducibility** | Code/data/weights availability |
+
+**Key Features:**
+- 🔗 Auto-download from ArXiv, OpenReview, and direct PDF links
+- 📑 Chunked reading for large papers exceeding context limits
+- ✅ Built-in quality checks ensuring template compliance
+- 📊 Structured output with tables and LaTeX math support
+
+**Quick Start:**
+```bash
+# Analyze a paper from ArXiv
+gemini -p "break down the paper: https://arxiv.org/pdf/2505.22596" --yolo
+
+# Analyze a local PDF
+gemini -p "analyze this paper" --files paper.pdf --yolo
+```
+
+
+
