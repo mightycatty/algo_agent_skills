@@ -1,50 +1,89 @@
 # Deep Learning Paper Analysis Template
 
-Use this template to deconstruct deep learning papers into a structured format. Make sure narrative is concise. 
+Use this template to deconstruct deep learning papers into a structured format. Keep narratives concise and precise.
 
-Paper name: {tile of the paper}
-Public Date: {year/month when the paper is published}
+> **Constraints:**
+> - **Precision:** Extract exact values (e.g., "learning rate 3e-4", not "a standard learning rate").
+> - **Objectivity:** Rely on reported metrics; avoid subjective claims unless substantiated.
+> - **Completeness:** If information is not disclosed, explicitly mark as "N/A" or "Not Disclosed".
 
+**Paper Title:** {title of the paper}
+**Publication Date:** {year/month when the paper is published}
+**Authors/Affiliation:** {author names and institutions}
+
+---
+
+## TL;DR
+> {3-5 sentences summarizing: What problem does this paper solve? What is the key method? What are the main results?}
+
+---
 
 ## 1. Problem Definition
 - **What is the core problem?**
 - **Why is it important/challenging?**
-- **What are the limitations of existing solutions?**
+- **What are the limitations of existing solutions (SOTA gap)?**
 
 ## 2. Main Insights & Contributions
-- **What are the key ideas or "ah-ha" moments?**
+- **What are the key ideas or "aha" moments?**
 - **What are the primary contributions (theoretical, empirical, or architectural)?**
 
 ## 3. Data Summary, Curation & Processing
-- **Datasets used:** (e.g., ImageNet, WikiText-103)
+
+| Dataset | Domain | Scale | Source |
+|---------|--------|-------|--------|
+| {name}  | {type} | {size}| {link} |
+
 - **Curation process:** How was the data collected/filtered?
-- **Processing procedures:** 
-  - Tokenization (for NLP)
-  - Augmentation techniques (for CV)
+- **Processing procedures:**
+  - Tokenization (for NLP) / Augmentation (for CV)
   - Normalization and cleaning steps
-  - Synthesis procedures(If there are)
+  - Synthetic data generation (if applicable)
 
 ## 4. Model Design
 - **Architecture Overview:** (e.g., Transformer-based, CNN, Diffusion)
-- **Architecture Graph:** draw a model graph
+- **Architecture Diagram:** (describe or draw the model structure)
 - **Key Components:** Detailed description of novel blocks, layers, or loss functions.
 - **Mathematical Formulation:** Key equations defining the model behavior.
+  - Use LaTeX format: $\mathcal{L} = ...$
 
 ## 5. Detailed Training Procedures
-- **Workfow Graph:** draw a training workflow graph
-- **Step-by-step training logic:** (e.g., pre-training vs. fine-tuning stage)
-- **Optimiz & Hyperparameters:** (e.g., AdamW, learning rate, weight decay, batch size)
-- **Infrastructure:** (e.g., number of GPUs, training durati
-
+- **Workflow Diagram:** (describe the training pipeline stages)
+- **Training Strategy:** (e.g., pre-training → SFT → RLHF)
+- **Optimizer & Hyperparameters:**
+  - Optimizer: (e.g., AdamW with $\beta_1=0.9$, $\beta_2=0.999$)
+  - Learning Rate: (max/min, schedule type, warmup steps)
+  - Batch Size: (global batch size in tokens/sequences)
+  - Weight Decay / Dropout / Gradient Clipping
+- **Infrastructure:**
+  - Hardware: (e.g., 2048 H100 GPUs)
+  - Training Duration: (e.g., 14 days, 2T tokens)
+  - Framework: (e.g., PyTorch, JAX)
 
 ## 6. Benchmark Results
-- **Summary Table:**
+
+| Benchmark | Metric | This Work | Baseline | Δ |
+|-----------|--------|-----------|----------|---|
+| {name}    | {metric}| {score}  | {score}  |{+/-}|
+
 - **Evaluation Metrics:** (e.g., Accuracy, F1, Perplexity, FID)
-- **Comparative Analysis:** Performance vs. SOTA (State-Of-The-Art) models.
+- **Comparative Analysis:** Performance vs. SOTA models.
 - **Ablation Studies:** Which components contribute most to the performance?
 
-## 7. Potential Limits & Shortcomings
-- **Computational Cost:** Inference latency or training resource requirements.
-- **Generalization:** Does it fail on specific edge cases or out-of-distribution data?
+## 7. Limitations & Future Work
+- **Computational Cost:** Inference latency, training resource requirements.
+- **Generalization:** Performance on edge cases or OOD data.
 - **Safety & Bias:** Any noted ethical concerns or biases in the model/data.
-- **Complexity:** Is the method overly complex compared to the gains?
+- **Complexity vs. Gains:** Is the method overly complex compared to the improvements?
+- **Open Questions:** What did the authors leave for future research?
+
+## 8. Reproducibility
+
+| Aspect | Status | Details |
+|--------|--------|---------|
+| **Code** | {✅ Available / ❌ Not Released} | {GitHub link or N/A} |
+| **Data** | {✅ Public / ⚠️ Partial / ❌ Proprietary} | {Dataset link or access info} |
+| **Weights** | {✅ Available / ❌ Not Released} | {HuggingFace/Model link or N/A} |
+
+- **Sufficient Details:** Are hyperparameters, configurations, and training steps fully disclosed?
+- **Hardware Requirements:** What compute is needed to reproduce? (e.g., "8× A100 for fine-tuning")
+- **Reproducibility Notes:** Any caveats or known issues with reproduction?
