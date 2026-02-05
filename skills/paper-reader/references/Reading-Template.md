@@ -88,6 +88,70 @@ Use this template to deconstruct deep learning papers into a structured format. 
 - **Hardware Requirements:** What compute is needed to reproduce? (e.g., "8× A100 for fine-tuning")
 - **Reproducibility Notes:** Any caveats or known issues with reproduction?
 
+## 9. Model Implementation (Optional - When Source Code Provided)
+
+> **Note:** This section is required ONLY when source code is provided via GitHub URL.
+
+### 9.1 Code Structure
+
+```
+{repository_name}/
+├── {main_module}/
+│   ├── model.py          # Core model definition
+│   ├── config.py         # Model configuration
+│   ├── layers.py         # Custom layers/modules
+│   └── ...
+└── ...
+```
+
+### 9.2 Core Components Mapping
+
+| Paper Concept | Code Location | Class/Function |
+|---------------|---------------|----------------|
+| {Component from §4} | `{file_path}` | `{ClassName}` |
+| {Loss function} | `{file_path}` | `{function_name}` |
+| {Novel layer} | `{file_path}` | `{ClassName}` |
+
+### 9.3 Key Implementation Details
+
+**Model Configuration:**
+```python
+# Key config parameters from code
+{
+    "hidden_size": {value},
+    "num_attention_heads": {value},
+    "num_hidden_layers": {value},
+    ...
+}
+```
+
+**Forward Pass Logic:**
+- Describe the data flow through the model
+- Highlight any implementation tricks not mentioned in paper
+
+**Notable Differences from Paper:**
+| Aspect | Paper Description | Actual Implementation |
+|--------|-------------------|----------------------|
+| {aspect} | {paper_says} | {code_does} |
+
+### 9.4 Dependencies & Requirements
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `torch` | {version} | Core framework |
+| `transformers` | {version} | Base classes |
+| ... | ... | ... |
+
+### 9.5 Usage Example
+
+```python
+# Minimal code to instantiate and run the model
+from {module} import {ModelClass}
+
+model = {ModelClass}.from_pretrained("{model_name}")
+output = model({input_example})
+```
+
 ---
 
 ## Section Completion Criteria
@@ -105,6 +169,7 @@ Use this template to deconstruct deep learning papers into a structured format. 
 | **§6 Results** | Table with ≥2 benchmark rows | Ablation findings summarized |
 | **§7 Limits** | ≥2 limitations listed | Future work mentioned |
 | **§8 Reproducibility** | All 3 table rows filled | Hardware requirements specified |
+| **§9 Implementation** | *(Only if code provided)* Code structure + component mapping | Usage example included |
 
 ### Acceptable "N/A" Usage
 

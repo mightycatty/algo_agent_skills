@@ -17,14 +17,33 @@ When analyzing a paper, follow this sequence:
 
 ### Step 0: Obtain Paper Content
 
-**If user provides a URL (e.g., arxiv link):**
+**If user provides a paper URL (e.g., arxiv link):**
 
-run script below to download the paper from a URL
-```
-python references/download_paper.py {URL}
+Run script below to download the paper from a URL:
+```bash
+python references/download_paper.py {PAPER_URL}
 ```
 
 Exit if you fail to download the paper after 3 attempts.
+
+**If user provides a GitHub source code URL (optional):**
+
+When user provides a GitHub folder URL containing the model implementation:
+```
+Example: https://github.com/huggingface/transformers/tree/main/src/transformers/models/bert
+```
+
+Download using the download-directory service:
+```
+https://download-directory.github.io/?url={GITHUB_FOLDER_URL}
+```
+
+Or instruct user to:
+1. Visit: `https://download-directory.github.io/?url={GITHUB_FOLDER_URL}`
+2. Download the ZIP file
+3. Extract and provide the folder path
+
+> **Note:** When source code is provided, you MUST fill in **§9 Model Implementation** section in the template.
 
 ### Step 1: Information Gathering
 - Read the entire paper (or provided sections)
@@ -114,6 +133,7 @@ For each template section:
 | **§6 Results** | Benchmark table + ablations | ☐ |
 | **§7 Limits** | At least 2 limitations or future work items | ☐ |
 | **§8 Reproducibility** | Code/Data/Weights availability table | ☐ |
+| **§9 Implementation** | *(If code provided)* Code structure + component mapping + usage example | ☐ |
 
 #### Quality Standards Check
 | Criterion | Requirement | ✓ |
@@ -138,10 +158,11 @@ For each template section:
 ```
 
 #### Final Validation
-- [ ] All 8 template sections are present
+- [ ] All 8 template sections are present (+ §9 if code provided)
 - [ ] Paper title and metadata are filled
 - [ ] At least one table exists (data or benchmarks)
 - [ ] Report length is reasonable (not too short/long)
+- [ ] If GitHub code provided: §9 includes code structure, component mapping, and usage example
 
 ## Output Format
 
@@ -159,6 +180,8 @@ Your response MUST follow the template structure with these constraints:
 - [Reading-Template.md](references/Reading-Template.md): The primary structured format for all paper deconstructions. Use this as the blueprint for your response.
 - [download_paper.py](references/download_paper.py): Python utility for downloading papers from URLs.
 - [chunk_paper.py](references/chunk_paper.py): Python utility for splitting large PDFs into manageable chunks.
+- [analyze_code.py](references/analyze_code.py): Python utility for analyzing source code structure and generating context-friendly chunks.
+- [example-usage.md](references/example-usage.md): Usage examples with Gemini CLI.
 
 ## Utilities
 
@@ -220,3 +243,68 @@ chunks/
 ```bash
 pip install PyMuPDF
 ```
+
+### Source Code Analysis Tool
+
+For large source code repositories that exceed context window, use the code analyzer:
+
+```bash
+# Skeleton mode (default) - extract structure only (~500 tokens)
+python references/analyze_code.py ./bert_code ./output
+
+# Full mode - generate prioritized source chunks
+python references/analyze_code.py ./bert_code ./output --mode full
+
+# Custom token limit per chunk
+python references/analyze_code.py ./bert_code ./output --mode full --max-tokens 3000
+```
+
+**File Priority System:**
+
+| Priority | File Patterns | Description |
+|----------|---------------|-------------|
+| P0 | `modeling_*.py`, `model.py` | Core model architecture |
+| P1 | `config*.py`, `attention*.py` | Configuration & attention mechanisms |
+| P2 | `layers.py`, `modules.py` | Building blocks & layers |
+| P3 | `train*.py`, `*_utils.py` | Training & utilities |
+| Skip | `test_*.py`, `__init__.py` | Tests & empty inits |
+
+**Output Structure:**
+```
+code_analysis/
+├── skeleton.md              # File tree + class/function signatures
+├── manifest.json            # Chunk index with file mapping
+├── chunk_00_P0.md           # Priority 0 files (core models)
+├── chunk_01_P1.md           # Priority 1 files (config, attention)
+└── ...
+```
+
+**⚠️ Large Codebase Handling Strategy:**
+
+```
+Phase 1: Skeleton Scan
+├── Run: python analyze_code.py ./code ./output
+├── Read: skeleton.md (~500 tokens)
+└── Goal: Understand file structure + class hierarchy
+
+Phase 2: Priority-based Deep Dive
+├── Read chunk_00_P0.md first (core model files)
+├── Map paper concepts → code classes
+│   ├── "Multi-Head Attention" → BertAttention class
+│   ├── "Feed-Forward Network" → BertIntermediate + BertOutput
+│   └── "Layer Normalization" → BertLayerNorm
+└── Read P1/P2 chunks only if needed
+
+Phase 3: Targeted Extraction
+└── Focus on specific methods implementing novel techniques
+```
+
+**Processing Workflow:**
+1. Run analyzer in skeleton mode → get structure overview
+2. Read `skeleton.md` → identify key classes
+3. If more detail needed: run in full mode
+4. Read P0 chunks first → core architecture
+5. Map paper concepts to code components
+6. Fill §9 Model Implementation section
+
+**No external dependencies** (uses Python stdlib only)

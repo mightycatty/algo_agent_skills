@@ -58,6 +58,10 @@ gemini -p "break down the paper: https://arxiv.org/pdf/2505.22596" --yolo
 
 # Analyze a local PDF
 gemini -p "analyze this paper" --files paper.pdf --yolo
+
+# analyze a paper with github source code
+gemini -p "break down the paper: https://arxiv.org/pdf/2511.21631 model source code:https://github.com/huggingface/transformers/tree/main/src/transformers/models/qwen3_vl. write to qwen3vl_report.md" --yolo -m gemini-3-pro-preview
+
 ```
 
 
